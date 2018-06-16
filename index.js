@@ -56,19 +56,22 @@ const loadData = ()=>{
 			var promises = []
 
 			for (var i in res.data.hits) {
-				console.log('trying to save '+res.data.hits[i].story_id)
-				var obj = new Article()
-				
-				obj.api_id = res.data.hits[i].story_id
-				obj.author = res.data.hits[i].author
-				obj.title = res.data.hits[i].story_title !== null? res.data.hits[i].story_title:res.data.hits[i].title
-				obj.url = res.data.hits[i].story_url !== null? res.data.hits[i].story_url:res.data.hits[i].url
-				obj.date = new Date(res.data.hits[i].created_at)
-				//console.log(id)
-				data.push(obj)
-				promises.push(Article.create(obj).catch((err)=>{
-					return err
-				}))
+				if(res.data.hits[i].story_title !==null || res.data.hits[i].title){
+					console.log('trying to save '+res.data.hits[i].story_id)
+
+					var obj = new Article()
+					
+					obj.api_id = res.data.hits[i].story_id
+					obj.author = res.data.hits[i].author
+					obj.title = res.data.hits[i].story_title !== null? res.data.hits[i].story_title:res.data.hits[i].title
+					obj.url = res.data.hits[i].story_url !== null? res.data.hits[i].story_url:res.data.hits[i].url
+					obj.date = new Date(res.data.hits[i].created_at)
+					
+					data.push(obj)
+					promises.push(Article.create(obj).catch((err)=>{
+						return err
+					}))
+				}
 			}
 			//resolve(data)
 			Promise.all(promises).then((objList)=>{
