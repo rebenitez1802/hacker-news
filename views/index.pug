@@ -1,0 +1,49 @@
+html
+	head
+		link(rel="stylesheet", href="/static/css/hacker-news.css")
+		title!= title
+		link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css", integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm", crossorigin="anonymous")
+		link(rel="stylesheet",href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.css")
+		script(src="https://code.jquery.com/jquery-3.2.1.min.js", crossorigin="anonymous")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js", integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q", crossorigin="anonymous")
+		script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js", integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl", crossorigin="anonymous")
+		
+	body
+		#confirm-delete.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+			.modal-dialog
+				.modal-content
+					.modal-header
+						h3 Confirm Delete
+						button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+					.modal-body
+						p You are about to delete this article, this procedure is irreversible.
+						p Do you want to proceed?
+					.modal-footer
+						button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+						a.btn.btn-danger.btn-ok Delete
+		if message
+			.alert(role='alert', class=message_type == "error" ?"alert-danger":"alert-success")!= message
+				
+
+		script(type='text/javascript', src='/static/js/control.js')
+		.container
+			.header.bg-dark.text-light.py-4.px-3
+
+				h1!= "HN Feed"
+				h5!= "We <3 hacker news!"
+			if news.length > 0
+				.list-news
+					.list-group.list-group-flush
+						each article, index in news
+							.list-group-item.list-group-item-action
+								.row
+									a(href=article.url class="col-11 d-flex flex-row text-dark" target="blank")!=article.title
+										.author.text-muted.mx-2!=" - "+article.author+" - "
+										.date.ml-auto!=moment(article.date).calendar(null, {sameDay: 'hh:mm a',lastDay: '[Yesterday]', lastWeek: 'MMM DD', sameElse: 'MMM DD'})
+									a(href="#", data-href="delete/"+article.api_id, class="col-1 text-dark text-center", data-target="#confirm-delete", data-toggle="modal")
+										span.oi.oi-trash
+			else
+				p!="There are no items to display at this time"
+		
+
+				
